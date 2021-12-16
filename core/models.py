@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                         PermissionsMixin
+from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
@@ -26,8 +27,14 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""
 
+    ROLE_CHOICES = (
+        ('blogger', _('Блогер')),
+        ('business', _('Бизнес')),
+        ('staff', _('Администратор')),
+    )
+
     email = models.EmailField(max_length=255, unique=True)
-    user_role = models.CharField(max_length=255, null=True, blank=True)
+    user_role = models.CharField(max_length=30, choices=ROLE_CHOICES, default='blogger', null=True, blank=True)
     phone = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
